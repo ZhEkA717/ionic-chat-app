@@ -6,13 +6,12 @@ import {
   IonBackButton,
   IonButton, IonButtons,
   IonContent,
-  IonFooter,
   IonHeader,
   IonIcon,
-  IonInput, IonInputPasswordToggle, IonList, IonNavLink, IonRouterLink, IonSpinner, IonText,
+  IonInput, IonInputPasswordToggle, IonList, IonSpinner, IonText,
   IonToolbar
 } from '@ionic/angular/standalone';
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {addIcons} from "ionicons";
 import {lockClosedOutline, mailOutline, personOutline} from "ionicons/icons";
 import {AuthService} from "../../../services/auth/auth.service";
