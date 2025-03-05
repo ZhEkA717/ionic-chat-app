@@ -1,22 +1,22 @@
-<ion-tabs>
+<ion-tabs (ionTabsDidChange)="getSelected($event)">
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="status">
-      <ion-icon name="chatbubble-outline"></ion-icon>
+      <ion-icon [name]="selectedTab() === 'status' ? 'chatbubble' : 'chatbubble-outline'"></ion-icon>
       <ion-label>Status</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="calls">
-      <ion-icon name="call-outline"></ion-icon>
+      <ion-icon [name]="selectedTab() === 'calls' ? 'call' : 'call-outline'"></ion-icon>
       <ion-label>Calls</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="chats">
-      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <ion-icon [name]=" selectedTab() === 'chats' ? 'chatbubbles' : 'chatbubbles-outline'"></ion-icon>
       <ion-label>Chats</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="settings">
-      <ion-icon name="cog-outline"></ion-icon>
+      <ion-icon [name]="selectedTab() === 'settings' ? 'cog' : 'cog-outline'"></ion-icon>
       <ion-label>Settings</ion-label>
     </ion-tab-button>
   </ion-tab-bar>

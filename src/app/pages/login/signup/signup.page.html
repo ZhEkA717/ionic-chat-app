@@ -1,0 +1,64 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list class="ion-margin ion-padding">
+    <div align="center" class="title">
+      <ion-text color="primary">FIRE CHAT</ion-text>
+    </div>
+    <form [formGroup]="form">
+      <ion-input
+        placeholder="Name"
+        type="name"
+        formControlName="name"
+        errorText="*Please enter your name"
+        class="ion-margin-bottom"
+      >
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+      </ion-input>
+      <ion-input
+        placeholder="Email"
+        type="email"
+        formControlName="email"
+        errorText="*Please enter your email"
+        class="ion-margin-bottom"
+      >
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+      </ion-input>
+      <ion-input
+        placeholder="Password"
+        type="password"
+        formControlName="password"
+        errorText="* Password must be at least 8 characters long"
+      >
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input-password-toggle slot="end" color="dark"></ion-input-password-toggle>
+      </ion-input>
+      @if (!isLogin()) {
+        <ion-button
+          size="large"
+          expand="block"
+          class="ion-margin-top"
+          [strong]="true"
+          (click)="onSubmit()"
+        >Signup
+        </ion-button>
+      } @else {
+        <ion-button
+          size="large"
+          expand="block"
+          class="ion-margin-top"
+          [strong]="true"
+        >
+          <ion-spinner></ion-spinner>
+        </ion-button>
+      }
+
+
+    </form>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,38 @@
+ion-list {
+  transform: translateY(50px);
+
+  .title {
+    margin-bottom: 10vh;
+    ion-text {
+      font-size: 1.8rem;
+      font-weight: bold;
+
+    }
+  }
+  ion-input {
+    font-size: 1rem;
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+ion-footer {
+  ion-toolbar {
+    --background: white;
+    .signup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-text {
+        font-size: 0.8rem;
+      }
+
+      ion-button {
+        --padding-start: 0;
+        text-transform: none;
+      }
+    }
+  }
+}

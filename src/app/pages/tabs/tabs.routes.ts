@@ -1,6 +1,5 @@
 import {Routes} from "@angular/router";
 import {TabsPage} from "./tabs.page";
-import {StatusPage} from "./status/status.page";
 
 export const routes: Routes = [
   {
