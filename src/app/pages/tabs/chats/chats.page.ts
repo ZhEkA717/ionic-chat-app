@@ -25,7 +25,7 @@ import {
 })
 export class ChatsPage implements OnInit {
 
-  chats = Array(10);
+  chats = Array(8);
 
   constructor() {
     addIcons({
