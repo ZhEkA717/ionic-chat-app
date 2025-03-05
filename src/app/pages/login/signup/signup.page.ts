@@ -2,6 +2,7 @@ import {Component, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
+  IonAlert,
   IonBackButton,
   IonButton, IonButtons,
   IonContent,
@@ -11,9 +12,10 @@ import {
   IonInput, IonInputPasswordToggle, IonList, IonNavLink, IonRouterLink, IonSpinner, IonText,
   IonToolbar
 } from '@ionic/angular/standalone';
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {addIcons} from "ionicons";
 import {lockClosedOutline, mailOutline, personOutline} from "ionicons/icons";
+import {AuthService} from "../../../services/auth/auth.service";
 
 type FormType = FormGroup<{
   name: FormControl<string | null>,
@@ -26,13 +28,17 @@ type FormType = FormGroup<{
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonInput, IonInputPasswordToggle, IonList, IonSpinner, IonText, ReactiveFormsModule, IonButtons, IonBackButton]
+  imports: [IonContent, IonHeader, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonInput, IonInputPasswordToggle, IonList, IonSpinner, IonText, ReactiveFormsModule, IonButtons, IonBackButton, IonAlert]
 })
 export class SignupPage implements OnInit {
   form!: FormType;
-  isLogin = signal<boolean>(false);
+  isSignUp = signal<boolean>(false);
+  errorMessage = signal<string | null>(null)
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
     addIcons({
       mailOutline,
       lockClosedOutline,
@@ -53,7 +59,31 @@ export class SignupPage implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    console.log(this.form.value);
+
+    const {name, email, password} = this.form.value;
+
+    this.signup({
+      name: name as string,
+      email: email as string,
+      password: password as string
+    }).then()
   }
 
+  async signup(formValue: {name: string, email: string, password: string}) {
+    try {
+      this.isSignUp.set(true);
+      const { id } = await this.authService.register(formValue);
+      console.log(id);
+      this.router.navigate(['/tabs']).then()
+    } catch (e: any) {
+      let msg = 'Could not sign you up. please try again'
+      if(e.code === 'auth/email-already-in-use') {
+        msg = 'Email already in use';
+      }
+      this.errorMessage.set(msg);
+    } finally {
+      this.isSignUp.set(false);
+      this.form.reset();
+    }
+  }
 }

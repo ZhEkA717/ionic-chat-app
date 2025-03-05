@@ -38,7 +38,7 @@
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
         <ion-input-password-toggle slot="end" color="dark"></ion-input-password-toggle>
       </ion-input>
-      @if (!isLogin()) {
+      @if (!isSignUp()) {
         <ion-button
           size="large"
           expand="block"
@@ -57,8 +57,13 @@
           <ion-spinner></ion-spinner>
         </ion-button>
       }
-
-
     </form>
   </ion-list>
+  <ion-alert
+    [isOpen]="errorMessage()"
+    (didDismiss)="errorMessage.set(null)"
+    header="Alert"
+    [message]="errorMessage()"
+    buttons="['OK']"
+  ></ion-alert>
 </ion-content>
