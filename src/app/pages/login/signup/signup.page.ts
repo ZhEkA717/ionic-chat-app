@@ -47,9 +47,9 @@ export class SignupPage implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      name: new FormControl("", [Validators.required]),
-      email: new FormControl("", [Validators.required, Validators.email]),
-      password: new FormControl("", [Validators.required, Validators.minLength(8)])
+      name: new FormControl("Zheka", [Validators.required]),
+      email: new FormControl("grushevskiy.yevgeniy@mail.ru", [Validators.required, Validators.email]),
+      password: new FormControl("unypyrebe", [Validators.required, Validators.minLength(8)])
     })
   }
 

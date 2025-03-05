@@ -60,10 +60,10 @@
     </form>
   </ion-list>
   <ion-alert
-    [isOpen]="errorMessage()"
+    [isOpen]="!!errorMessage()"
     (didDismiss)="errorMessage.set(null)"
-    header="Alert"
+    header="Error"
     [message]="errorMessage()"
-    buttons="['OK']"
+    [buttons]="['Close']"
   ></ion-alert>
 </ion-content>
