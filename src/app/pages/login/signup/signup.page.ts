@@ -26,7 +26,7 @@ type FormType = FormGroup<{
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, CommonModule, FormsModule, IonButton, IonFooter, IonIcon, IonInput, IonInputPasswordToggle, IonList, IonRouterLink, IonSpinner, IonText, ReactiveFormsModule, RouterLink, IonButtons, IonBackButton, IonNavLink]
+  imports: [IonContent, IonHeader, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonInput, IonInputPasswordToggle, IonList, IonSpinner, IonText, ReactiveFormsModule, IonButtons, IonBackButton]
 })
 export class SignupPage implements OnInit {
   form!: FormType;
