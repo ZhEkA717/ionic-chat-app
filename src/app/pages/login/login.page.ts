@@ -3,7 +3,6 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {
   IonButton,
   IonContent, IonFooter,
-  IonHeader,
   IonIcon,
   IonInput,
   IonInputPasswordToggle, IonList, IonRouterLink, IonSpinner, IonText,
