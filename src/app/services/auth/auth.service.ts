@@ -1,5 +1,5 @@
 import {Injectable, OnInit, signal} from '@angular/core';
-import {Auth, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from "@angular/fire/auth";
+import {Auth, createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword} from "@angular/fire/auth";
 import {ApiService} from "../api/api.service";
 
 @Injectable({
@@ -60,6 +60,14 @@ export class AuthService {
       if(response?.user) {
         this.setData(response.user.uid);
       }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async resetPassword(email: string) {
+    try {
+      await sendPasswordResetEmail(this.fireAuth, email);
     } catch (e) {
       throw e;
     }

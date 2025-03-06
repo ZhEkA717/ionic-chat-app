@@ -1,11 +1,12 @@
 import {Component, OnInit, signal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
+  IonAlert,
   IonButton,
-  IonContent, IonFooter,
+  IonContent, IonFooter, IonHeader,
   IonIcon,
   IonInput,
-  IonInputPasswordToggle, IonList, IonRouterLink, IonSpinner, IonText,
+  IonInputPasswordToggle, IonList, IonModal, IonRouterLink, IonSpinner, IonText, IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
 import {addIcons} from "ionicons";
@@ -23,18 +24,22 @@ type FormType = FormGroup<{
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonContent, IonInput, ReactiveFormsModule, IonIcon, IonInputPasswordToggle, IonList, IonButton, IonSpinner, IonText, IonRouterLink, RouterLink, IonFooter, IonToolbar]
+  imports: [IonContent, IonInput, ReactiveFormsModule, IonIcon, IonInputPasswordToggle, IonList, IonButton, IonSpinner, IonText, IonRouterLink, RouterLink, IonFooter, IonToolbar, IonAlert, IonModal, IonHeader, IonTitle]
 })
 export class LoginPage implements OnInit {
 
   form!: FormType;
+  forgotPasswordEmail!: FormControl<string>
   isLogin = signal<boolean>(false);
+  isForgot = signal<boolean>(false);
+  isOpenModal = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {
+    this.isOpenModal.set(false);
     addIcons({
       mailOutline,
       lockClosedOutline
@@ -66,16 +71,39 @@ export class LoginPage implements OnInit {
       await this.authService.login(email, password);
       this.router.navigate(['/tabs']).then()
     } catch (e: any) {
-      let msg = 'Could not sign you up. please try again'
-      if(e.code === 'auth/email-already-in-use') {
-        msg = 'Email already in use';
-      } else if (e.code === 'auth/wrong-password') {
-        msg = 'Please enter a correct password'
-      }
-      this.errorMessage.set(msg);
+      this.errorMessage.set('Failed to log in, try again');
     } finally {
       this.isLogin.set(false);
-      this.form.reset();
+      this.form.reset()
+    }
+  }
+
+  openModalForgotPassword() {
+    this.forgotPasswordEmail = new FormControl("", {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email]}
+    );
+    this.isOpenModal.set(true)
+  }
+
+  onForgotSubmit() {
+    if (this.forgotPasswordEmail.invalid) {
+      this.forgotPasswordEmail.markAllAsTouched();
+      return;
+    }
+
+    this.resetPassword(this.forgotPasswordEmail.value);
+  }
+
+  async resetPassword(email: string) {
+    try {
+      this.isForgot.set(true);
+      await this.authService.resetPassword(email).then()
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.isForgot.set(false);
+      this.isOpenModal.set(false);
     }
   }
 }

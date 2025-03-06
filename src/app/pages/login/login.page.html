@@ -23,7 +23,7 @@
         <ion-input-password-toggle slot="end" color="medium"></ion-input-password-toggle>
       </ion-input>
       <div align="right">
-        <ion-button fill="clear" size="small" color="medium">
+        <ion-button (click)="openModalForgotPassword()" fill="clear" size="small" color="medium">
           Forgot password?
         </ion-button>
       </div>
@@ -43,13 +43,64 @@
           class="ion-margin-top"
           [strong]="true"
         >
-          <ion-spinner></ion-spinner>
+          <ion-spinner name="crescent"></ion-spinner>
         </ion-button>
       }
 
 
     </form>
   </ion-list>
+  <ion-alert
+    [isOpen]="!!errorMessage()"
+    (didDismiss)="errorMessage.set(null)"
+    header="Login error"
+    [message]="errorMessage()"
+    [buttons]="['Close']"
+  ></ion-alert>
+  <ion-modal
+    [isOpen]="isOpenModal()"
+    (didDismiss)="isOpenModal.set(false)"
+    [breakpoints]="[0.5, 0.8, 1]"
+    [initialBreakpoint]="0.5"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title color="primary">Reset password</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div style="height: 100px;" class="ion-margin ion-padding forgot-input">
+          <ion-input
+            placeholder="Email"
+            type="email"
+            errorText="*Please enter your email"
+            [formControl]="forgotPasswordEmail"
+          >
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+          </ion-input>
+        </div>
+        @if (!isForgot()) {
+          <ion-button
+            size="large"
+            expand="block"
+            class="ion-margin"
+            [strong]="true"
+            (click)="onForgotSubmit()"
+          >Send Link</ion-button>
+        } @else {
+          <ion-button
+            size="large"
+            expand="block"
+            class="ion-margin"
+            [strong]="true"
+          >
+            <ion-spinner name="crescent"></ion-spinner>
+          </ion-button>
+        }
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 <ion-footer class="ion-no-border">
   <ion-toolbar>

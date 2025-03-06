@@ -54,7 +54,7 @@
           class="ion-margin-top"
           [strong]="true"
         >
-          <ion-spinner></ion-spinner>
+          <ion-spinner name="crescent"></ion-spinner>
         </ion-button>
       }
     </form>
@@ -62,7 +62,7 @@
   <ion-alert
     [isOpen]="!!errorMessage()"
     (didDismiss)="errorMessage.set(null)"
-    header="Error"
+    header="Signup error"
     [message]="errorMessage()"
     [buttons]="['Close']"
   ></ion-alert>
