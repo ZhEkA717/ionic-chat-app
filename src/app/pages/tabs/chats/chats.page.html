@@ -1,3 +1,4 @@
+
 <ion-header [translucent]="true">
   <ion-toolbar class="ion-padding-top">
     <ion-title>Chats</ion-title>
@@ -17,8 +18,10 @@
     </ion-toolbar>
   </ion-header>
 
+  @let chatRoomsArray = chatRooms();
+
   <ion-list>
-    @for(chatRoom of chatRooms(); track $index) {
+    @for(chatRoom of chatRoomsArray; track $index) {
       <ion-item (click)="goToChat(chatRoom.roomId)" [button]="true" lines [detail]="true">
         <ion-avatar slot="start">
           <ion-img [src]="chatRoom.photo" />
@@ -31,9 +34,12 @@
 
         </ion-label>
       </ion-item>
+    } @empty {
+      <app-empty-screen [model]="model"></app-empty-screen>
     }
 
   </ion-list>
+
   <ion-modal
     #usersModal
     [isOpen]="isNewChat()"

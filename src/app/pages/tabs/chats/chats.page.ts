@@ -18,19 +18,25 @@ import {ChatRoomService} from "../../../services/chat-room/chat-room.service";
 import {User} from "../../../interfaces/user";
 import {NavigationExtras, Router} from "@angular/router";
 import {ChatRoom} from "../../../interfaces/chat-room";
+import {EmptyScreenComponent} from "../../../components/empty-screen/empty-screen.component";
 
 @Component({
   selector: 'app-chats',
   templateUrl: './chats.page.html',
   styleUrls: ['./chats.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonAvatar, IonImg, IonLabel, IonButton, IonButtons, IonIcon, IonModal, UsersComponent]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonAvatar, IonImg, IonLabel, IonButton, IonButtons, IonIcon, IonModal, UsersComponent, EmptyScreenComponent]
 })
 export class ChatsPage {
-  chats = Array(10);
   isNewChat = signal<boolean>(false)
   users = computed<User[] | null>(() => this.chatRoomService.users());
   chatRooms = computed<ChatRoom[] | null>(() => this.chatRoomService.chatRooms());
+
+  model = {
+    icon: 'chatbubbles-outline',
+    title: "No Chat Rooms",
+    color: 'danger'
+  }
   constructor(
     private chatRoomService: ChatRoomService,
     private router: Router
@@ -63,6 +69,6 @@ export class ChatsPage {
   }
 
   goToChat(roomId: string) {
-    this.router.navigate(['/tabs/chats', roomId])
+    this.router.navigate(['/tabs/chats', roomId]).then()
   }
 }
