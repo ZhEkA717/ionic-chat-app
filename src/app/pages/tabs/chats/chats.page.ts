@@ -17,6 +17,7 @@ import {UsersComponent} from "../../../components/users/users.component";
 import {ChatRoomService} from "../../../services/chat-room/chat-room.service";
 import {User} from "../../../interfaces/user";
 import {NavigationExtras, Router} from "@angular/router";
+import {ChatRoom} from "../../../interfaces/chat-room";
 
 @Component({
   selector: 'app-chats',
@@ -29,6 +30,7 @@ export class ChatsPage {
   chats = Array(10);
   isNewChat = signal<boolean>(false)
   users = computed<User[] | null>(() => this.chatRoomService.users());
+  chatRooms = computed<ChatRoom[] | null>(() => this.chatRoomService.chatRooms());
   constructor(
     private chatRoomService: ChatRoomService,
     private router: Router
@@ -58,5 +60,9 @@ export class ChatsPage {
     } catch (e) {
       throw e;
     }
+  }
+
+  goToChat(roomId: string) {
+    this.router.navigate(['/tabs/chats', roomId])
   }
 }
