@@ -57,6 +57,13 @@
     [message]="errorMessage()"
     [buttons]="['Close']"
   ></ion-alert>
+  <ion-alert
+    [isOpen]="!!forgotPasswordMessage()"
+    (didDismiss)="forgotPasswordMessage.set(null)"
+    header="Reset password"
+    [message]="forgotPasswordMessage()"
+    [buttons]="['Close']"
+  ></ion-alert>
   <ion-modal
     [isOpen]="isOpenModal()"
     (didDismiss)="isOpenModal.set(false)"

@@ -34,6 +34,7 @@ export class LoginPage implements OnInit {
   isForgot = signal<boolean>(false);
   isOpenModal = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
+  forgotPasswordMessage = signal<string | null>(null);
 
   constructor(
     private authService: AuthService,
@@ -92,13 +93,14 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    this.resetPassword(this.forgotPasswordEmail.value);
+    this.resetPassword(this.forgotPasswordEmail.value).then();
   }
 
   async resetPassword(email: string) {
     try {
       this.isForgot.set(true);
-      await this.authService.resetPassword(email).then()
+      await this.authService.resetPassword(email);
+      this.forgotPasswordMessage.set('Reset password link sent to your email id success!')
     } catch (e) {
       console.log(e);
     } finally {
