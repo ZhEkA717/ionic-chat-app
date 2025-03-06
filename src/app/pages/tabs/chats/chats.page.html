@@ -20,25 +20,26 @@
 
   @let chatRoomsArray = chatRooms();
 
-  <ion-list>
-    @for(chatRoom of chatRoomsArray; track $index) {
-      <ion-item (click)="goToChat(chatRoom.roomId)" [button]="true" lines [detail]="true">
-        <ion-avatar slot="start">
-          <ion-img [src]="chatRoom.photo" />
-        </ion-avatar>
-        <ion-label>
-          {{chatRoom.name}}
-          @if(chatRoom?.lastMessage) {
-            <p>{{ chatRoom.lastMessage }}</p>
-          }
+  @if (chatRoomsArray && chatRoomsArray.length) {
+    <ion-list>
+      @for(chatRoom of chatRoomsArray; track $index) {
+        <ion-item (click)="goToChat(chatRoom.roomId)" [button]="true" lines [detail]="true">
+          <ion-avatar slot="start">
+            <ion-img [src]="chatRoom.photo" />
+          </ion-avatar>
+          <ion-label>
+            {{chatRoom.name}}
+            @if(chatRoom?.lastMessage) {
+              <p>{{ chatRoom.lastMessage }}</p>
+            }
 
-        </ion-label>
-      </ion-item>
-    } @empty {
-      <app-empty-screen [model]="model"></app-empty-screen>
-    }
-
-  </ion-list>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  } @else {
+    <app-empty-screen [model]="model"></app-empty-screen>
+  }
 
   <ion-modal
     #usersModal

@@ -1,5 +1,5 @@
 import {Component, input} from '@angular/core';
-import {IonCol, IonGrid, IonIcon, IonLabel, IonRow} from "@ionic/angular/standalone";
+import {IonCol, IonContent, IonGrid, IonIcon, IonLabel, IonRow} from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-empty-screen',
@@ -10,7 +10,8 @@ import {IonCol, IonGrid, IonIcon, IonLabel, IonRow} from "@ionic/angular/standal
     IonRow,
     IonCol,
     IonIcon,
-    IonLabel
+    IonLabel,
+    IonContent
   ],
   standalone: true
 })
