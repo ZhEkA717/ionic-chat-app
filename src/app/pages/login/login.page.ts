@@ -10,7 +10,8 @@ import {
 } from '@ionic/angular/standalone';
 import {addIcons} from "ionicons";
 import {lockClosedOutline, mailOutline} from "ionicons/icons";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
+import {AuthService} from "../../services/auth/auth.service";
 
 type FormType = FormGroup<{
   email: FormControl<string | null>,
@@ -28,8 +29,12 @@ export class LoginPage implements OnInit {
 
   form!: FormType;
   isLogin = signal<boolean>(false);
+  errorMessage = signal<string | null>(null);
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
     addIcons({
       mailOutline,
       lockClosedOutline
@@ -48,6 +53,29 @@ export class LoginPage implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    console.log(this.form.value);
+    const { email, password } = this.form.value;
+    this.login({
+      email: email as string,
+      password: password as string
+    }).then()
+  }
+
+  async login({email, password}: {email: string, password: string}) {
+    try {
+      this.isLogin.set(true);
+      await this.authService.login(email, password);
+      this.router.navigate(['/tabs']).then()
+    } catch (e: any) {
+      let msg = 'Could not sign you up. please try again'
+      if(e.code === 'auth/email-already-in-use') {
+        msg = 'Email already in use';
+      } else if (e.code === 'auth/wrong-password') {
+        msg = 'Please enter a correct password'
+      }
+      this.errorMessage.set(msg);
+    } finally {
+      this.isLogin.set(false);
+      this.form.reset();
+    }
   }
 }

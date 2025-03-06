@@ -1,4 +1,4 @@
-import {Injectable, signal} from '@angular/core';
+import {Injectable, OnInit, signal} from '@angular/core';
 import {Auth, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from "@angular/fire/auth";
 import {ApiService} from "../api/api.service";
 
@@ -11,7 +11,8 @@ export class AuthService {
   constructor(
     private fireAuth: Auth,
     private apiService: ApiService
-  ) { }
+  ) {}
+
 
   setData(uid: string | null) {
     if(!this.uid())
@@ -45,7 +46,6 @@ export class AuthService {
 
       return { id: uid }
     } catch (e) {
-      console.log('Registration error: ', e);
       throw e;
     }
   }
@@ -61,7 +61,6 @@ export class AuthService {
         this.setData(response.user.uid);
       }
     } catch (e) {
-      console.log('Login error: ', e);
       throw e;
     }
   }
