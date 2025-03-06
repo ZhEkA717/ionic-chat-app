@@ -23,7 +23,7 @@ import {
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonAvatar, IonImg, IonLabel, IonButton, IonButtons, IonIcon]
 })
-export class ChatsPage implements OnInit {
+export class ChatsPage {
 
   chats = Array(10);
 
@@ -32,8 +32,4 @@ export class ChatsPage implements OnInit {
       addCircle
     })
   }
-
-  ngOnInit() {
-  }
-
 }
