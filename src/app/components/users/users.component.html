@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>New Chat</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="close.emit(true)" color="medium">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen] = true>
+  <ion-list lines="full">
+    @if(users(); as users) {
+      @for(user of users; track user) {
+        <ion-item (click)="startChat(user)" [button]="true" [detail]="false">
+          <ion-avatar slot="start">
+            <ion-img [src]="user.photo" />
+          </ion-avatar>
+          <ion-label>
+            {{user.name}}
+            <p>{{user.email}}</p>
+          </ion-label>
+        </ion-item>
+      }
+    }
+
+  </ion-list>
+</ion-content>

@@ -3,7 +3,7 @@
     <ion-title>Chats</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button size="large" (click)="openChatModal()">
         <ion-icon slot="icon-only" name="add-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -31,4 +31,18 @@
     }
 
   </ion-list>
+  <ion-modal
+    #usersModal
+    [isOpen]="isNewChat()"
+    (didDismiss)="isNewChat.set(false)"
+  >
+    <ng-template>
+      @if(users()) {
+        <app-users
+          [users]="users()"
+          (user)="startChat($event, usersModal)"
+          (close)="usersModal.dismiss()"></app-users>
+      }
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -1,6 +1,8 @@
 import {Injectable, OnInit, signal} from '@angular/core';
-import {Auth, createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword} from "@angular/fire/auth";
+import {Auth, createUserWithEmailAndPassword, getAuth,
+  onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword} from "@angular/fire/auth";
 import {ApiService} from "../api/api.service";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,8 @@ export class AuthService {
 
   constructor(
     private fireAuth: Auth,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
   ) {}
 
 
@@ -73,7 +76,39 @@ export class AuthService {
     }
   }
 
+  checkAuth(){
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(this.fireAuth, resolve, reject);
+    })
+  }
+
   randomIntFromInterval(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  async getUserData(id: string) {
+    try {
+      const useRef = this.apiService.getRef(`users/${id}`);
+      const snapshot = await this.apiService.getData(useRef);
+      if(snapshot?.exists()) {
+        return snapshot.val()
+      } else {
+        throw new Error('No such user exists');
+      }
+    } catch (e) {
+      throw e;
+    }
+
+  }
+
+  async logout() {
+    try {
+      await this.fireAuth.signOut();
+      this.uid.set(null);
+      this.router.navigate(['/login']).then();
+      return true;
+    } catch (e) {
+      throw e;
+    }
   }
 }

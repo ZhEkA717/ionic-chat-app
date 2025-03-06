@@ -28,5 +28,9 @@ export const routes: Routes = [
         loadComponent: () => import('./settings/settings.page').then( m => m.SettingsPage)
       }
     ]
+  },
+  {
+    path: 'chats/:id',
+    loadComponent: () => import('./chat/chat.page').then( m => m.ChatPage)
   }
 ]
