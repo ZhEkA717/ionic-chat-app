@@ -1,0 +1,14 @@
+ion-footer {
+  .ion-textarea-container {
+    width: 100%;
+    margin-right: 10px;
+  }
+  ion-button {
+    --border-radius: 50%;
+  }
+
+  ion-textarea {
+    border: 1px solid var(--ion-color-medium);
+    border-radius: 20px;
+  }
+}

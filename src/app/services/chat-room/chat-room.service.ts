@@ -46,43 +46,47 @@ export class ChatRoomService {
   }
 
   async createChatRoom(userIds: string[], roomName: string, type: string = 'private'):Promise<any> {
-    const chatRoomRef = this.apiService.getRef('chatrooms');
-    const usersList = [this.currentUserId(), ...userIds];
-    const sortedUserList = usersList.sort();
-    const usersHash = sortedUserList.join(',');
+    try {
+      const chatRoomRef = this.apiService.getRef('chatrooms');
+      const usersList = [this.currentUserId(), ...userIds];
+      const sortedUserList = usersList.sort();
+      const usersHash = sortedUserList.join(',');
 
-    const existingChatRoomQuery = query(
-      chatRoomRef,
-      this.apiService.orderByChild('usersHash'), // query by users hash
-      this.apiService.equalTo(usersHash)
-    )
+      const existingChatRoomQuery = query(
+        chatRoomRef,
+        this.apiService.orderByChild('usersHash'), // query by users hash
+        this.apiService.equalTo(usersHash)
+      )
 
-    const existingChatRoomSnapshot = await this.apiService.getData(existingChatRoomQuery);
-    if (existingChatRoomSnapshot?.exists()) {
-      // filter the result for a private
-      const chatRooms = existingChatRoomSnapshot.val();
+      const existingChatRoomSnapshot = await this.apiService.getData(existingChatRoomQuery);
+      if (existingChatRoomSnapshot?.exists()) {
+        // filter the result for a private
+        const chatRooms = existingChatRoomSnapshot.val();
 
-      // check for private chat room
-      const privateChatRoom = Object.values(chatRooms).find((chatRoom: any) => chatRoom.type === 'private');
-      if(privateChatRoom) {
-        return privateChatRoom; // return existing private chat room if found
+        // check for private chat room
+        const privateChatRoom = Object.values(chatRooms).find((chatRoom: any) => chatRoom.type === 'private');
+        if(privateChatRoom) {
+          return privateChatRoom; // return existing private chat room if found
+        }
       }
-    }
 
-    // if no matching private chat room existing, create a new one
-    const newChatRoom = this.apiService.pushData(chatRoomRef);
-    const chatRoomId = newChatRoom.key;
-    const chatRoomData = {
-      id: chatRoomId,
-      users: sortedUserList,
-      usersHash,
-      name: roomName,
-      type,
-      createdAt: new Date().toISOString()
-    }
+      // if no matching private chat room existing, create a new one
+      const newChatRoom = this.apiService.pushData(chatRoomRef);
+      const chatRoomId = newChatRoom.key;
+      const chatRoomData = {
+        id: chatRoomId,
+        users: sortedUserList,
+        usersHash,
+        name: roomName,
+        type,
+        createdAt: new Date().toISOString()
+      }
 
-    await this.apiService.setRefData(newChatRoom, chatRoomData);
-    return chatRoomData;
+      await this.apiService.setRefData(newChatRoom, chatRoomData);
+      return chatRoomData;
+    } catch (e) {
+      throw e;
+    }
   }
 
   getChatRooms() {

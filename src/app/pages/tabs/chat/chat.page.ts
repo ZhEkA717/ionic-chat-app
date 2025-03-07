@@ -1,40 +1,86 @@
-import {Component, OnInit, signal} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {Component, computed, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {
-  IonBackButton,
+  IonBackButton, IonButton,
   IonButtons,
-  IonContent,
-  IonHeader,
-  IonList,
+  IonContent, IonFooter,
+  IonHeader, IonIcon, IonItem,
+  IonList, IonSpinner, IonTextarea,
   IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
 import {ActivatedRoute} from "@angular/router";
+import {ChatBoxComponent} from "../../../components/chat-box/chat-box.component";
+import {EmptyScreenComponent} from "../../../components/empty-screen/empty-screen.component";
+import {addIcons} from "ionicons";
+import {chatbubblesOutline, send} from "ionicons/icons";
+import {ChatService} from "../../../services/chat/chat.service";
+import {Chat} from "../../../interfaces/chat";
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonList]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonList, ChatBoxComponent, EmptyScreenComponent, IonFooter, IonTextarea, FormsModule, IonItem, IonIcon, IonButton, IonSpinner]
 })
-export class ChatPage implements OnInit{
+export class ChatPage implements OnInit {
+  chats = signal(Array(10));
+  chatsMessages = computed<Chat[] | null>(() => this.chatService.chatMessages())
+  id: string | null = null;
   name = signal<string | null>(null);
+  message = signal<string | null>(null)
+  isLoading = signal<boolean>(false)
 
-  constructor(private activatedRoute: ActivatedRoute) {
+  model = {
+    icon: 'chatbubbles-outline',
+    title: "No Messages",
+    color: 'danger'
+  }
 
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private chatService: ChatService
+  ) {
+    addIcons({
+      chatbubblesOutline,
+      send
+    })
   }
 
   ngOnInit(): void {
-    this.setChatName();
+    this.setChatNameAndId();
+    this.chatService.getChatMessages(this.id as string)
   }
 
-  setChatName() {
-    const data = this.activatedRoute.snapshot.queryParams as { name?: string};
-    if(data?.name) {
-      this.name.set(data.name)
+  setChatNameAndId() {
+    const {params, queryParams} = this.activatedRoute.snapshot;
+    if (queryParams['name']) {
+      this.name.set(queryParams['name'])
     }
+
+    if (params['id']) {
+      this.id = params['id'];
+    }
+
   }
 
+  async sendMessage() {
+    const message = this.message();
+    if(!(message && message.trim())) {
+        return;
+    }
+
+    try {
+      this.isLoading.set(true)
+      await this.chatService.sendMessage(this.id!, message);
+    } catch (e) {
+
+    } finally {
+      this.isLoading.set(false)
+      this.message.set('');
+    }
+
+  }
 }

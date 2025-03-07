@@ -11,5 +11,41 @@
 </ion-header>
 
 <ion-content>
-  <ion-list></ion-list>
+  @let charArray = chatsMessages() ;
+  @if (charArray && charArray.length) {
+    <ion-list>
+      @for (chat of charArray; track $index) {
+        <app-chat-box [chat]="chat"></app-chat-box>
+      }
+    </ion-list>
+  } @else {
+    <app-empty-screen [model]="model"></app-empty-screen>
+  }
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item lines="none">
+      <div class="ion-textarea-container">
+        <ion-textarea
+          autoGrow
+          rows="1"
+          placeholder="Send message"
+          class="ion-text-center"
+          [(ngModel)]="message"
+        ></ion-textarea>
+      </div>
+      @if(!isLoading()) {
+        <ion-button slot="end" size="large" (click)="sendMessage()">
+          <ion-icon slot="icon-only" name="send"></ion-icon>
+        </ion-button>
+      } @else {
+        <ion-button slot="end" size="large" (click)="sendMessage()">
+          <ion-spinner slot="icon-only" name="crescent"></ion-spinner>
+        </ion-button>
+      }
+
+
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
