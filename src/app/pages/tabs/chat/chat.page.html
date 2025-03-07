@@ -10,10 +10,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [scrollEvents]="true">
   @let charArray = chatsMessages() ;
   @if (charArray && charArray.length) {
-    <ion-list>
+    <ion-list class="ion-margin-bottom">
       @for (chat of charArray; track $index) {
         <app-chat-box [chat]="chat"></app-chat-box>
       }
@@ -33,6 +33,7 @@
           placeholder="Send message"
           class="ion-text-center"
           [(ngModel)]="message"
+          (keydown)="handlerKeyDown($event)"
         ></ion-textarea>
       </div>
       @if(!isLoading()) {

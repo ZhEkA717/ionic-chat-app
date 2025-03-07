@@ -1,4 +1,4 @@
-import {Component, computed, OnInit, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, OnInit, signal, viewChild, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
@@ -26,13 +26,13 @@ import {Chat} from "../../../interfaces/chat";
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonList, ChatBoxComponent, EmptyScreenComponent, IonFooter, IonTextarea, FormsModule, IonItem, IonIcon, IonButton, IonSpinner]
 })
 export class ChatPage implements OnInit {
-  chats = signal(Array(10));
   chatsMessages = computed<Chat[] | null>(() => this.chatService.chatMessages())
   id: string | null = null;
   name = signal<string | null>(null);
   message = signal<string | null>(null)
-  isLoading = signal<boolean>(false)
-
+  isLoading = signal<boolean>(false);
+  content = viewChild<IonContent>(IonContent);
+  first = true;
   model = {
     icon: 'chatbubbles-outline',
     title: "No Messages",
@@ -43,15 +43,30 @@ export class ChatPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private chatService: ChatService
   ) {
+    effect(() => {
+      if(this.chatsMessages() && this.chatsMessages()?.length) {
+        setTimeout(() => {
+          this.scrollToBottom(this.first ? 0 : 500)
+          this.first = false;
+        })
+      }
+    });
+
     addIcons({
       chatbubblesOutline,
       send
     })
   }
 
+
+  scrollToBottom(duration: number = 500) {
+    this.content()?.scrollToBottom(duration);
+  }
+
+
   ngOnInit(): void {
     this.setChatNameAndId();
-    this.chatService.getChatMessages(this.id as string)
+    this.chatService.getChatMessages(this.id as string);
   }
 
   setChatNameAndId() {
@@ -83,4 +98,12 @@ export class ChatPage implements OnInit {
     }
 
   }
+
+  handlerKeyDown(event: KeyboardEvent) {
+    if(event.key === 'Enter') {
+      event.preventDefault()
+      this.sendMessage().then()
+    }
+  }
+
 }
