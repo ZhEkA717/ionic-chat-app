@@ -23,7 +23,7 @@
   @if (chatRoomsArray && chatRoomsArray.length) {
     <ion-list>
       @for(chatRoom of chatRoomsArray; track $index) {
-        <ion-item (click)="goToChat(chatRoom.roomId)" [button]="true" lines [detail]="true">
+        <ion-item (click)="goToChat(chatRoom)" [button]="true" lines [detail]="true">
           <ion-avatar slot="start">
             <ion-img [src]="chatRoom.photo" />
           </ion-avatar>
@@ -38,7 +38,18 @@
       }
     </ion-list>
   } @else {
-    <app-empty-screen [model]="model"></app-empty-screen>
+    @if(chatRoomsSpinner()) {
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    } @else {
+      <app-empty-screen [model]="model"></app-empty-screen>
+    }
   }
 
   <ion-modal

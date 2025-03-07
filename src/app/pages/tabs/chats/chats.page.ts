@@ -1,11 +1,11 @@
 import {Component, computed, signal} from '@angular/core';
 import {
-  IonAvatar, IonButton, IonButtons,
-  IonContent,
+  IonAvatar, IonButton, IonButtons, IonCol,
+  IonContent, IonGrid,
   IonHeader, IonIcon,
   IonImg,
   IonItem, IonLabel,
-  IonList, IonModal,
+  IonList, IonModal, IonRow, IonSpinner,
   IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
@@ -25,12 +25,13 @@ import {EmptyScreenComponent} from "../../../components/empty-screen/empty-scree
   templateUrl: './chats.page.html',
   styleUrls: ['./chats.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonAvatar, IonImg, IonLabel, IonButton, IonButtons, IonIcon, IonModal, UsersComponent, EmptyScreenComponent]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonAvatar, IonImg, IonLabel, IonButton, IonButtons, IonIcon, IonModal, UsersComponent, EmptyScreenComponent, IonSpinner, IonGrid, IonCol, IonRow]
 })
 export class ChatsPage {
   isNewChat = signal<boolean>(false)
   users = computed<User[] | null>(() => this.chatRoomService.users());
   chatRooms = computed<ChatRoom[] | null>(() => this.chatRoomService.chatRooms());
+  chatRoomsSpinner = computed<boolean>(() => this.chatRoomService.chatRoomsSpinner())
 
   model = {
     icon: 'chatbubbles-outline',
@@ -57,18 +58,21 @@ export class ChatsPage {
       //dismiss modal
       modal.dismiss().then();
       //navigate to chat page
-      const navData: NavigationExtras = {
-        queryParams: {
-          name: user.name
-        }
-      }
-      this.router.navigate(['/tabs/chats', room.id], navData).then()
+      this.navigateToChat(user.name, room.id);
     } catch (e) {
       throw e;
     }
   }
 
-  goToChat(roomId: string) {
-    this.router.navigate(['/tabs/chats', roomId]).then()
+  goToChat({name, roomId}: ChatRoom) {
+    if (name)
+      this.navigateToChat(name, roomId)
+  }
+
+  navigateToChat(name: string, roomId: string) {
+    const navData: NavigationExtras = { queryParams: {name} };
+    this.router.navigate(['/tabs/chats', roomId], navData).then()
   }
 }
+
+

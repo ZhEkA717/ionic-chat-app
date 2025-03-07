@@ -10,9 +10,10 @@ import {ChatRoom} from "../../interfaces/chat-room";
   providedIn: 'root'
 })
 export class ChatRoomService {
-
   users = signal<User[] | null>([]);
-  chatRooms = signal<ChatRoom[] | null>([]);
+  usersSpinner = signal<boolean>(false);
+  chatRooms = signal<ChatRoom[] | null>(null);
+  chatRoomsSpinner = signal<boolean>(false);
   currentUserId = computed(() => this.authService.uid())
 
   constructor(
@@ -24,6 +25,7 @@ export class ChatRoomService {
   }
 
   getUsers() {
+    this.usersSpinner.set(true);
     const usersRef = this.apiService.getRef('users');
 
     onValue(usersRef, (snapshot) => {
@@ -35,8 +37,10 @@ export class ChatRoomService {
       } else {
         this.users.set([]);
       }
+      this.usersSpinner.set(false);
     },
       (error) => {
+        this.usersSpinner.set(false);
         console.log(error);
       }
     )
@@ -83,6 +87,7 @@ export class ChatRoomService {
   }
 
   getChatRooms() {
+    this.chatRoomsSpinner.set(true)
     const chatRoomsRef = this.apiService.getRef('chatrooms');
 
     onValue(
@@ -98,7 +103,6 @@ export class ChatRoomService {
             // check if current user is part of the chatroom
             if (room.type === 'private' && room.users.includes(this.currentUserId())) {
               const otherUserID = room.users.find((userId: string) => userId !== this.currentUserId());
-
               // fetch
               return this.getOtherUserDataAndLastMessage(
                 otherUserID,
@@ -113,11 +117,16 @@ export class ChatRoomService {
           Promise.all(chatRoomData)
             .then((item) => {
             const validChatRooms = item.filter((room) => room !== null);
-              this.chatRooms.set(validChatRooms)
+              this.chatRooms.set(validChatRooms);
+            })
+            .finally(() => {
+              this.chatRoomsSpinner.set(false)
             })
 
         } else {
           // no chat rooms found
+          this.chatRoomsSpinner.set(false)
+          this.chatRooms.set([]);
         }
       }
     )

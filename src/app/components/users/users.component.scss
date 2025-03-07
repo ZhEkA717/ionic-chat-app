@@ -4,3 +4,9 @@ ion-item {
     font-size: 1.2rem;
   }
 }
+
+ion-spinner {
+  transform: translateY(10vh);
+  width: 70px;
+  height: 70px;
+}

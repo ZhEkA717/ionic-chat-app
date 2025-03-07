@@ -10,21 +10,34 @@
 </ion-header>
 
 
-<ion-content [fullscreen] = true>
-  <ion-list lines="full">
-    @if(users(); as users) {
-      @for(user of users; track user) {
+<ion-content [fullscreen]=true>
+  @let usersArray = users() ;
+
+  @if (usersArray && usersArray.length) {
+    <ion-list lines="full">
+      @for (user of usersArray; track user) {
         <ion-item (click)="startChat(user)" [button]="true" [detail]="false">
           <ion-avatar slot="start">
-            <ion-img [src]="user.photo" />
+            <ion-img [src]="user.photo"/>
           </ion-avatar>
           <ion-label>
-            {{user.name}}
-            <p>{{user.email}}</p>
+            {{ user.name }}
+            <p>{{ user.email }}</p>
           </ion-label>
         </ion-item>
       }
+    </ion-list>
+  } @else {
+    @if (usersSpinner()) {
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    } @else {
+      <app-empty-screen [model]="model"></app-empty-screen>
     }
-
-  </ion-list>
+  }
 </ion-content>
