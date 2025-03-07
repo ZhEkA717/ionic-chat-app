@@ -3,7 +3,6 @@ import {ApiService} from "../api/api.service";
 import { onValue, query } from '@angular/fire/database';
 import {AuthService} from "../auth/auth.service";
 import {User} from "../../interfaces/user";
-import {AstObject} from "@angular/compiler-cli/linker/src/ast/ast_value";
 import {ChatRoom} from "../../interfaces/chat-room";
 
 @Injectable({
