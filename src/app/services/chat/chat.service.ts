@@ -10,6 +10,7 @@ import {AuthService} from "../auth/auth.service";
 export class ChatService {
   currentUserId = computed(() => this.authService.uid());
   chatMessages = signal<Chat[] | null>([])
+  chatMessagesLoading = signal<boolean>(false)
   constructor(
     private authService: AuthService,
     private apiService: ApiService
@@ -35,6 +36,7 @@ export class ChatService {
   }
 
   getChatMessages(chatRoomId: string) {
+    this.chatMessagesLoading.set(true);
     const chatRoomRef = this.apiService.getRef(`chatrooms/${chatRoomId}/messages`);
 
     // listen for realtime updates to the chat messages within the chatroom
@@ -50,7 +52,9 @@ export class ChatService {
       } else {
         this.chatMessages.set([]);
       }
+        this.chatMessagesLoading.set(false);
     }, (error) => {
+        this.chatMessagesLoading.set(false);
         console.log(error);
       }
     )

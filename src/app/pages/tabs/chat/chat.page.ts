@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, computed, effect, OnInit, signal, viewChild, ViewChild} from '@angular/core';
+import {Component, computed, effect, OnInit, signal, ViewChild, viewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
   IonBackButton, IonButton,
-  IonButtons,
-  IonContent, IonFooter,
-  IonHeader, IonIcon, IonItem,
-  IonList, IonSpinner, IonTextarea,
+  IonButtons, IonCol,
+  IonContent, IonFooter, IonGrid,
+  IonHeader, IonIcon, IonInput, IonItem,
+  IonList, IonRow, IonSpinner, IonTextarea,
   IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
@@ -17,16 +17,18 @@ import {addIcons} from "ionicons";
 import {chatbubblesOutline, send} from "ionicons/icons";
 import {ChatService} from "../../../services/chat/chat.service";
 import {Chat} from "../../../interfaces/chat";
+import {Keyboard} from "@capacitor/keyboard";
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonList, ChatBoxComponent, EmptyScreenComponent, IonFooter, IonTextarea, FormsModule, IonItem, IonIcon, IonButton, IonSpinner]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonList, ChatBoxComponent, EmptyScreenComponent, IonFooter, IonTextarea, FormsModule, IonItem, IonIcon, IonButton, IonSpinner, IonCol, IonGrid, IonRow, IonInput]
 })
 export class ChatPage implements OnInit {
   chatsMessages = computed<Chat[] | null>(() => this.chatService.chatMessages())
+  chatsMessagesLoading = computed<boolean>(() => this.chatService.chatMessagesLoading())
   id: string | null = null;
   name = signal<string | null>(null);
   message = signal<string | null>(null)
@@ -38,10 +40,12 @@ export class ChatPage implements OnInit {
     title: "No Messages",
     color: 'danger'
   }
+  isKeyboardVisible = signal<boolean>(false);
+  @ViewChild("textarea") textarea!: IonTextarea
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) {
     effect(() => {
       if(this.chatsMessages() && this.chatsMessages()?.length) {
@@ -59,7 +63,7 @@ export class ChatPage implements OnInit {
   }
 
 
-  scrollToBottom(duration: number = 500) {
+  scrollToBottom(duration: number = 200) {
     this.content()?.scrollToBottom(duration);
   }
 
@@ -105,5 +109,4 @@ export class ChatPage implements OnInit {
       this.sendMessage().then()
     }
   }
-
 }

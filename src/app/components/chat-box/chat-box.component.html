@@ -4,7 +4,7 @@
       class="ion-text-wrap container"
       [slot]="chat()?.isCurrentUser ? 'end' : 'start'"
     >
-      <ion-text>{{chat()?.message}}</ion-text>
+      <ion-text [color]="chat()?.isCurrentUser ? '' : 'medium'">{{chat()?.message}}</ion-text>
       <ion-note>
         <small>{{ chat()?.timestamp | date : "HH:mm" }}</small>
         @if(chat()?.isCurrentUser) {

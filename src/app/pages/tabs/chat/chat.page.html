@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="ion-padding-top">
     <ion-title>{{ name() }}</ion-title>
-    <ion-buttons>
+    <ion-buttons slot="start">
       <ion-back-button
         defaultHref="/tabs/chats"
         color="medium"
@@ -19,34 +19,55 @@
       }
     </ion-list>
   } @else {
-    <app-empty-screen [model]="model"></app-empty-screen>
+    @if (!chatsMessagesLoading()) {
+      <app-empty-screen [model]="model"></app-empty-screen>
+    } @else {
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    }
+  }
+  @if (isKeyboardVisible()) {
+    <ng-container *ngTemplateOutlet="textarea"></ng-container>
   }
 </ion-content>
 
 <ion-footer>
+  @if (!isKeyboardVisible()) {
+    <ng-container *ngTemplateOutlet="textarea"></ng-container>
+  }
+</ion-footer>
+
+<ng-template #textarea>
   <ion-toolbar>
-    <ion-item lines="none">
-      <div class="ion-textarea-container">
+    <ion-list>
+      <ion-item lines="none">
         <ion-textarea
-          autoGrow
+          slot="start"
+          class="ion-padding-right"
+          [autoGrow]="true"
           rows="1"
           placeholder="Send message"
-          class="ion-text-center"
           [(ngModel)]="message"
           (keydown)="handlerKeyDown($event)"
+          style="overflow: auto"
         ></ion-textarea>
-      </div>
-      @if(!isLoading()) {
-        <ion-button slot="end" size="large" (click)="sendMessage()">
-          <ion-icon slot="icon-only" name="send"></ion-icon>
-        </ion-button>
-      } @else {
-        <ion-button slot="end" size="large" (click)="sendMessage()">
-          <ion-spinner slot="icon-only" name="crescent"></ion-spinner>
-        </ion-button>
-      }
+      </ion-item>
+    </ion-list>
 
-
-    </ion-item>
+    @if(!isLoading()) {
+      <ion-button slot="end" size="medium" (click)="sendMessage()">
+        <ion-icon color="light" slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    } @else {
+      <ion-button slot="end" size="medium" (click)="sendMessage()">
+        <ion-spinner slot="icon-only" name="crescent"></ion-spinner>
+      </ion-button>
+    }
   </ion-toolbar>
-</ion-footer>
+</ng-template>
+
